@@ -1,15 +1,14 @@
 export default class EventHub {
-  private cache = {};
-  on(eventName, fn) {
+  private cache: { [key: string]: Array<(data: unknown) => void> } = {};
+  on(eventName: string, fn: (data: unknown) => void) {
     //把fn推进this.cache[eventName]
-    this.cache[eventName] = this.cache[eventName] || [];
-    this.cache[eventName].push(fn);
+    (this.cache[eventName] || []).push(fn);
   }
-  emit(eventName, data?) {
+  emit(eventName: string, data?: unknown) {
     //把this.cache[eventName]
     (this.cache[eventName] || []).forEach(fn => fn(data));
   }
-  off(eventName, fn) {
+  off(eventName: string, fn: (data: unknown) => void) {
     let index = indexOf(this.cache[eventName], fn);
     if (index === -1) return;
     this.cache[eventName].splice(index, 1);
